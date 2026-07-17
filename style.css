@@ -108,7 +108,7 @@ section[id]{ scroll-margin-top: calc(var(--nav-h) + 18px); }
   align-self: center;
 }
 
-.section-pad{ padding: 88px 0; }
+.section-pad{ padding: 28px 0; }
 
 /* barre d'échelle réutilisable (façon carte papier) */
 .scale-bar{ display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 260px; }
@@ -188,8 +188,8 @@ section[id]{ scroll-margin-top: calc(var(--nav-h) + 18px); }
 }
 
 .portrait{
-  width: 104px;
-  height: 104px;
+  width: 184px;
+  height: 184px;
   border-radius: 50%;
   border: 2px solid var(--brass);
   outline: 1px solid rgba(217,179,108,0.35);
@@ -202,6 +202,7 @@ section[id]{ scroll-margin-top: calc(var(--nav-h) + 18px); }
   color: var(--brass-light);
   flex-shrink: 0;
   background: var(--ink-deep-2);
+  overflow:hidden;
 }
 /* Pour utiliser une vraie photo : remplacer le <span> ci-dessous
    par <img src="votre-photo.jpg" alt="Portrait"> et ajouter

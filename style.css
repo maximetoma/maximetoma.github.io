@@ -1,0 +1,596 @@
+/* ============================================================
+   0. RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+ul { margin: 0; padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+
+/* ============================================================
+   1. TOKENS — palette "feuille topographique"
+   ============================================================ */
+:root{
+  --paper:       #EFEAD8;   /* fond principal, papier carte */
+  --paper-deep:  #E3DCC3;   /* fond des cartouches / cartes */
+  --paper-line:  rgba(28, 43, 34, 0.10); /* traits de graticule */
+  --ink:         #1C2B22;   /* texte principal */
+  --ink-soft:    #4A5B4E;   /* texte secondaire */
+  --ink-deep:    #10190F;   /* fond sombre (header/footer) */
+  --ink-deep-2:  #17231A;
+  --contour:     #5C7A52;   /* vert courbes de niveau */
+  --water:       #2B5A72;   /* bleu carte (liens secondaires) */
+  --brass:       #B8863B;   /* laiton — accent signature */
+  --brass-deep:  #8C6528;
+  --brass-light: #D9B36C;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Public Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --nav-h: 56px;
+  --maxw: 1100px;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  :root{ --motion-ok: 1; }
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+html{ scroll-behavior: smooth; }
+body{
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* graticule de fond, fixe, discret */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to right, var(--paper-line) 0 1px, transparent 1px 88px),
+    repeating-linear-gradient(to bottom, var(--paper-line) 0 1px, transparent 1px 88px);
+}
+
+:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
+
+.wrap{ max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+section[id]{ scroll-margin-top: calc(var(--nav-h) + 18px); }
+
+/* petit repère de grille type "feuille de carte" (ex: A·1) */
+.grid-ref{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--brass-deep);
+  border: 1px solid var(--brass);
+  padding: 3px 9px;
+  border-radius: 2px;
+  background: rgba(184,134,59,0.08);
+}
+
+.section-head{
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 34px;
+  flex-wrap: wrap;
+}
+.section-head h2{
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.4vw, 34px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.section-head::after{
+  content: "";
+  flex: 1 1 60px;
+  height: 1px;
+  min-width: 40px;
+  background: repeating-linear-gradient(to right, var(--ink) 0 6px, transparent 6px 12px);
+  opacity: 0.5;
+  align-self: center;
+}
+
+.section-pad{ padding: 88px 0; }
+
+/* barre d'échelle réutilisable (façon carte papier) */
+.scale-bar{ display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 260px; }
+.scale-bar__track{ display: flex; height: 7px; border: 1px solid currentColor; }
+.scale-bar__track span{ flex: 1; }
+.scale-bar__track span:nth-child(odd){ background: currentColor; }
+.scale-bar__track span:nth-child(even){ background: transparent; }
+.scale-bar__labels{ display:flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; opacity: 0.8; }
+
+/* icônes ligne, style "instrument technique" */
+.ic{ width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+/* reveal on scroll */
+.reveal{ opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible{ opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  .reveal{ opacity: 1; transform: none; transition: none; }
+}
+
+/* ============================================================
+   3. HEADER — cartouche de la carte
+   ============================================================ */
+.header{
+  background: var(--ink-deep);
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+  padding: 54px 0 0;
+}
+.header .wrap{ position: relative; z-index: 2; }
+
+.contours{
+  position: absolute;
+  right: -60px;
+  top: -40px;
+  width: 480px;
+  opacity: 0.35;
+  z-index: 1;
+}
+.contours path{ fill: none; stroke: var(--contour); stroke-width: 1.1; }
+
+.header__top{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brandmark{ display: flex; align-items: center; gap: 12px; }
+.brandmark .ic-compass{ width: 34px; height: 34px; stroke: var(--brass-light); stroke-width: 1.3; }
+.brandmark span{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--brass-light);
+  text-transform: uppercase;
+}
+
+.coords{
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--paper);
+  opacity: 0.85;
+}
+.coords strong{ color: var(--brass-light); display:block; letter-spacing: 0.04em; }
+
+.header__body{
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  padding: 40px 0 30px;
+  flex-wrap: wrap;
+}
+
+.portrait{
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  border: 2px solid var(--brass);
+  outline: 1px solid rgba(217,179,108,0.35);
+  outline-offset: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 30px;
+  color: var(--brass-light);
+  flex-shrink: 0;
+  background: var(--ink-deep-2);
+}
+/* Pour utiliser une vraie photo : remplacer le <span> ci-dessous
+   par <img src="votre-photo.jpg" alt="Portrait"> et ajouter
+   à .portrait : overflow:hidden; puis à l'image object-fit:cover; width/height:100% */
+
+.title-block h1{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 5.4vw, 54px);
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+}
+.title-block .role{
+  margin-top: 8px;
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--brass-light);
+  font-weight: 500;
+}
+.cartouche-line{
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  color: rgba(239,234,216,0.6);
+}
+.cartouche-line span{ margin: 0 8px; }
+.cartouche-line span:first-child{ margin-left: 0; }
+
+.header .scale-bar{ color: var(--paper); opacity: 0.75; margin: 26px 0 0; }
+
+/* ============================================================
+   4. NAV — la légende
+   ============================================================ */
+.legend-nav{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(239,234,216,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(28,43,34,0.18);
+}
+.legend-nav .wrap{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: var(--nav-h);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.legend-nav .wrap::-webkit-scrollbar{ display: none; }
+.legend-nav__label{
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  padding-right: 14px;
+  border-right: 1px solid var(--paper-line);
+  margin-right: 10px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.legend-item{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color .2s ease, background .2s ease;
+}
+.legend-item .ic{ width: 15px; height: 15px; }
+.legend-item:hover{ color: var(--ink); background: rgba(28,43,34,0.06); }
+.legend-item.is-active{ color: var(--brass-deep); background: rgba(184,134,59,0.14); }
+
+/* ============================================================
+   5. PROFIL
+   ============================================================ */
+.profil p{ max-width: 700px; font-size: 16.5px; color: var(--ink); }
+.profil p + p{ margin-top: 14px; }
+.profil-figures{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 18px;
+  margin-top: 36px;
+  max-width: 700px;
+}
+.figure{
+  border: 1px solid var(--paper-line);
+  border-left: 3px solid var(--brass);
+  background: var(--paper-deep);
+  padding: 14px 16px;
+}
+.figure strong{ display:block; font-family: var(--font-display); font-size: 26px; }
+.figure span{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; color: var(--ink-soft); }
+
+/* ============================================================
+   6. COMPÉTENCES — légende de carte
+   ============================================================ */
+.skills-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 40px 48px;
+}
+.skill-cat h3{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--water);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--paper-line);
+}
+.skill{ margin-bottom: 16px; }
+.skill__head{ display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+.skill__name{ font-weight: 600; }
+.skill__level{ font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); }
+.skill__bar{
+  position: relative;
+  height: 8px;
+  background: repeating-linear-gradient(to right, var(--ink) 0 1px, transparent 1px 20%);
+  background-color: var(--paper-deep);
+  border: 1px solid var(--paper-line);
+}
+.skill__fill{
+  position: absolute; inset: 0;
+  width: var(--level, 0%);
+  background: var(--contour);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(.2,.7,.2,1);
+}
+.skill__fill{ width: 100%; }
+.skill.is-visible .skill__fill{ transform: scaleX(var(--fillscale, 1)); }
+.skill:not(.is-visible) .skill__fill{ transform: scaleX(0); }
+
+/* on encode le niveau via un rapport, appliqué en style inline --fillscale */
+
+/* ============================================================
+   7. EXPÉRIENCE — ligne de levé topographique
+   ============================================================ */
+.timeline{ position: relative; padding-left: 34px; }
+.timeline::before{
+  content: "";
+  position: absolute;
+  left: 6px; top: 6px; bottom: 6px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 5px, transparent 5px 10px);
+  opacity: 0.6;
+}
+.station{ position: relative; margin-bottom: 40px; }
+.station:last-child{ margin-bottom: 0; }
+.station__marker{
+  position: absolute;
+  left: -34px; top: 4px;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--brass);
+}
+.station__marker::before, .station__marker::after{
+  content: "";
+  position: absolute;
+  background: var(--brass);
+}
+.station__marker::before{ left: 50%; top: -4px; bottom: -4px; width: 1px; transform: translateX(-50%); }
+.station__marker::after{ top: 50%; left: -4px; right: -4px; height: 1px; transform: translateY(-50%); }
+
+.station__card{
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-line);
+  padding: 18px 22px;
+}
+.station__meta{
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  font-family: var(--font-mono); font-size: 11.5px; color: var(--water); margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+.station__card h3{ font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.station__org{ color: var(--ink-soft); font-size: 14px; margin-top: 2px; margin-bottom: 10px; }
+.station__card ul{ display: grid; gap: 6px; }
+.station__card li{ font-size: 14.5px; padding-left: 16px; position: relative; }
+.station__card li::before{ content: "—"; position: absolute; left: 0; color: var(--brass-deep); }
+
+/* ============================================================
+   8. FORMATION
+   ============================================================ */
+.edu-list{ display: grid; gap: 16px; }
+.edu-item{
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border: 1px solid var(--paper-line);
+  border-left: 3px solid var(--water);
+  background: var(--paper-deep);
+}
+.edu-item h3{ font-family: var(--font-display); font-size: 17px; font-weight: 600; }
+.edu-item p{ color: var(--ink-soft); font-size: 13.5px; margin-top: 2px; }
+.edu-item time{ font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+
+/* ============================================================
+   9. PROJETS — tuiles de carte
+   ============================================================ */
+.tiles{ display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 22px; }
+.tile{
+  position: relative;
+  padding: 20px 22px 22px;
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-line);
+  overflow: hidden;
+}
+.tile__inner{ position: relative; z-index: 1; }
+.tile::before{
+  content: "";
+  position: absolute; inset: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s ease;
+  background:
+    linear-gradient(90deg, var(--brass) 50%, transparent 50%) repeat-x,
+    linear-gradient(90deg, var(--brass) 50%, transparent 50%) repeat-x,
+    linear-gradient(0deg, var(--brass) 50%, transparent 50%) repeat-y,
+    linear-gradient(0deg, var(--brass) 50%, transparent 50%) repeat-y;
+  background-size: 10px 2px, 10px 2px, 2px 10px, 2px 10px;
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  animation: marchingAnts .6s linear infinite paused;
+}
+.tile:hover::before, .tile:focus-within::before{ opacity: 1; animation-play-state: running; }
+@keyframes marchingAnts{ to{ background-position: 10px 0, -10px 100%, 0 -10px, 100% 10px; } }
+@media (prefers-reduced-motion: reduce){ .tile::before{ animation: none !important; } }
+
+.tile__coord{
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--brass-deep);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.tile h3{ font-family: var(--font-display); font-size: 19px; font-weight: 600; margin-bottom: 8px; }
+.tile p{ font-size: 14.5px; color: var(--ink-soft); }
+.tile__tags{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tile__tags li{
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.03em;
+  padding: 3px 8px; border: 1px solid var(--paper-line); color: var(--ink-soft);
+}
+.tile__link{
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 16px; font-weight: 600; font-size: 13.5px; color: var(--water);
+  border-bottom: 1px solid transparent; transition: border-color .2s ease;
+}
+.tile__link:hover{ border-color: var(--water); }
+
+/* ============================================================
+   10. CONTACT
+   ============================================================ */
+.contact-box{
+  background: var(--ink-deep);
+  color: var(--paper);
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+}
+.contact-box h2{ color: var(--paper); }
+.contact-box .section-head::after{ background: repeating-linear-gradient(to right, var(--paper) 0 6px, transparent 6px 12px); }
+.contact-intro p{ color: rgba(239,234,216,0.75); font-size: 15px; max-width: 420px; }
+.contact-list{ display: grid; gap: 14px; margin-top: 20px; }
+.contact-list a{
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 14px;
+  color: var(--paper);
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(239,234,216,0.14);
+  transition: color .2s ease, padding-left .2s ease;
+}
+.contact-list a .ic{ stroke: var(--brass-light); }
+.contact-list a:hover{ color: var(--brass-light); padding-left: 6px; }
+
+.cta-download{
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 28px;
+  padding: 13px 22px;
+  background: var(--brass);
+  color: var(--ink-deep);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  border: none;
+  transition: background .2s ease, transform .2s ease;
+}
+.cta-download:hover{ background: var(--brass-light); transform: translateY(-1px); }
+.cta-download .ic{ stroke: var(--ink-deep); }
+
+/* ============================================================
+   11. FOOTER
+   ============================================================ */
+.footer{
+  background: var(--ink-deep-2);
+  color: rgba(239,234,216,0.7);
+  padding: 26px 0 34px;
+}
+.footer .wrap{
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+}
+.footer .scale-bar{ color: rgba(239,234,216,0.7); max-width: 160px; }
+.footer small{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; }
+
+/* ============================================================
+   12. RÈGLE VERTICALE — repères de marge (desktop uniquement)
+   ============================================================ */
+.margin-rail{
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: none;
+}
+.margin-rail__track{ position: relative; padding: 0 0; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.margin-rail__track::before{
+  content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; background: var(--ink); opacity: 0.25; transform: translateX(-50%);
+}
+.margin-rail button{
+  position: relative;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  opacity: 0.55;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.margin-rail button:hover{ opacity: 0.9; }
+.margin-rail button.is-active{
+  opacity: 1;
+  background: var(--brass);
+  border-color: var(--brass-deep);
+  color: var(--ink-deep);
+}
+
+@media (min-width: 1180px){ .margin-rail{ display: block; } }
+
+/* ============================================================
+   13. RETOUR EN HAUT
+   ============================================================ */
+.to-top{
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 45;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--ink-deep);
+  border: 1px solid var(--brass);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .25s ease, transform .25s ease, visibility .25s;
+}
+.to-top.is-visible{ opacity: 1; visibility: visible; transform: translateY(0); }
+.to-top svg{ stroke: var(--brass-light); width: 20px; height: 20px; transition: transform .4s ease; }
+.to-top:hover svg{ transform: rotate(28deg); }
+
+/* ============================================================
+   14. RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px){
+  .skills-grid{ grid-template-columns: 1fr; gap: 30px; }
+  .tiles{ grid-template-columns: 1fr; }
+  .contact-box{ grid-template-columns: 1fr; padding: 30px 22px; }
+  .profil-figures{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px){
+  .wrap{ padding: 0 18px; }
+  .section-pad{ padding: 64px 0; }
+  .header__body{ gap: 20px; }
+  .title-block h1{ font-size: 32px; }
+  .coords{ text-align: left; }
+  .header__top{ flex-direction: column; }
+  .profil-figures{ grid-template-columns: 1fr; }
+  .contours{ display: none; }
+  .contact-box{ gap: 26px; }
+}

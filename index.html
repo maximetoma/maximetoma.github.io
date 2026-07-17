@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prénom Nom — Ingénieur·e Géomaticien·ne</title>
+<meta name="description" content="CV en ligne — Ingénieur·e Géomaticien·ne : SIG, cartographie, télédétection, analyse spatiale.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER — cartouche principal de la "feuille"
+     🔧 À PERSONNALISER : nom, poste, coordonnées, date
+     ============================================================ -->
+<header class="header">
+  <svg class="contours" viewBox="0 0 600 400" aria-hidden="true">
+    <path d="M50,200 C80,120 180,80 300,90 C420,100 520,150 540,220 C560,290 480,350 360,360 C240,370 120,340 80,280 C60,250 40,225 50,200 Z"/>
+    <path d="M90,205 C115,140 195,110 300,118 C405,126 480,165 495,220 C510,275 445,320 355,330 C265,340 165,315 130,270 C110,245 75,235 90,205 Z"/>
+    <path d="M130,210 C150,160 210,140 300,145 C390,150 450,180 460,220 C470,260 420,290 350,298 C280,306 200,288 172,258 C158,242 118,235 130,210 Z"/>
+  </svg>
+
+  <div class="wrap">
+    <div class="header__top">
+      <div class="brandmark">
+        <svg class="ic-compass" viewBox="0 0 40 40" fill="none" stroke-width="1.3" stroke-linecap="round">
+          <circle cx="20" cy="20" r="17"/>
+          <path d="M20 4 L20 10 M20 30 L20 36 M4 20 L10 20 M30 20 L36 20"/>
+          <path d="M20 12 L25 20 L20 28 L15 20 Z" fill="currentColor" fill-opacity="0.15"/>
+        </svg>
+        <span>Feuille&nbsp;n°1 — CV</span>
+      </div>
+      <div class="coords">
+        <strong>45.4230° N / 0.6296° E</strong>
+        Ville, France
+      </div>
+    </div>
+
+    <div class="header__body">
+      <div class="portrait" aria-hidden="true"><span>PN</span></div>
+      <div class="title-block">
+        <h1>Prénom Nom</h1>
+        <p class="role">Ingénieur·e Géomaticien·ne — SIG, Cartographie &amp; Analyse Spatiale</p>
+        <p class="cartouche-line">
+          <span>ÉCHELLE 1:1</span>
+          <span>SYSTÈME RGF93 / LAMBERT-93</span>
+          <span>RÉV. 07/2026</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="scale-bar" aria-hidden="true">
+      <div class="scale-bar__track"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="scale-bar__labels"><span>0</span><span>DÉFILER ↓</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     NAVIGATION — la légende de la carte
+     ============================================================ -->
+<nav class="legend-nav" aria-label="Navigation principale">
+  <div class="wrap">
+    <span class="legend-nav__label">Légende</span>
+    <a href="#profil" class="legend-item" data-nav>
+      <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-4 4-6 7-6s5.8 2 7 6"/></svg>
+      Profil
+    </a>
+    <a href="#competences" class="legend-item" data-nav>
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 17 L17 4"/><path d="M7 20 L20 7"/><path d="M4 17 L7 20"/><path d="M17 4 L20 7"/></svg>
+      Compétences
+    </a>
+    <a href="#experience" class="legend-item" data-nav>
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 20 C7 8 10 16 12 10 C14 4 17 14 20 6"/><circle cx="12" cy="10" r="1.4" fill="currentColor" stroke="none"/></svg>
+      Expérience
+    </a>
+    <a href="#formation" class="legend-item" data-nav>
+      <svg class="ic" viewBox="0 0 24 24"><path d="M3 9 L12 4 L21 9 L12 14 Z"/><path d="M7 11.5 V17 C9 19 15 19 17 17 V11.5"/></svg>
+      Formation
+    </a>
+    <a href="#projets" class="legend-item" data-nav>
+      <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+      Projets
+    </a>
+    <a href="#contact" class="legend-item" data-nav>
+      <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M4 6 L12 13 L20 6"/></svg>
+      Contact
+    </a>
+  </div>
+</nav>
+
+<!-- règle verticale de marge (scrollspy desktop) -->
+<div class="margin-rail" aria-hidden="true">
+  <div class="margin-rail__track">
+    <button data-rail-for="profil" title="Profil">A1</button>
+    <button data-rail-for="competences" title="Compétences">B2</button>
+    <button data-rail-for="experience" title="Expérience">C3</button>
+    <button data-rail-for="formation" title="Formation">D4</button>
+    <button data-rail-for="projets" title="Projets">E5</button>
+    <button data-rail-for="contact" title="Contact">F6</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============================================================
+       PROFIL
+       🔧 À PERSONNALISER : texte de présentation, chiffres clés
+       ============================================================ -->
+  <section id="profil" class="section-pad profil reveal" aria-labelledby="profil-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">A · 1</span>
+        <h2 id="profil-h">Profil</h2>
+      </div>
+
+      <p>
+        Géomaticien·ne diplômé·e, je conçois et déploie des outils de gestion et de visualisation
+        de données spatiales pour l'aménagement du territoire, l'environnement et les
+        collectivités. J'interviens de la collecte de terrain (topographie, drone, LiDAR)
+        jusqu'à la restitution finale (WebSIG, cartes imprimées, tableaux de bord).
+      </p>
+      <p>
+        Curieux·se et rigoureux·se, j'aime traduire une problématique territoriale en modèle
+        de données clair, puis en carte ou en application que des équipes non spécialistes
+        peuvent s'approprier facilement.
+      </p>
+
+      <div class="profil-figures">
+        <div class="figure"><strong>5 ans</strong><span>D'EXPÉRIENCE EN SIG</span></div>
+        <div class="figure"><strong>30+</strong><span>PROJETS CARTOGRAPHIQUES</span></div>
+        <div class="figure"><strong>RGF93</strong><span>SYSTÈME DE RÉFÉRENCE PRÉFÉRÉ</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       COMPÉTENCES
+       🔧 À PERSONNALISER : catégories, outils, niveaux
+       Niveau : ajuster --fillscale de 0.2 (1/5) à 1 (5/5)
+       ============================================================ -->
+  <section id="competences" class="section-pad reveal" aria-labelledby="comp-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">B · 2</span>
+        <h2 id="comp-h">Compétences</h2>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-cat">
+          <h3>Outils SIG &amp; cartographie</h3>
+          <div class="skill"><div class="skill__head"><span class="skill__name">QGIS</span><span class="skill__level">5/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:1"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">ArcGIS Pro</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Mapbox GL / Leaflet</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+        </div>
+
+        <div class="skill-cat">
+          <h3>Programmation &amp; données</h3>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Python (GeoPandas, Rasterio)</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">PostgreSQL / PostGIS</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">SQL</span><span class="skill__level">3/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.6"></div></div></div>
+        </div>
+
+        <div class="skill-cat">
+          <h3>Télédétection &amp; acquisition</h3>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Imagerie satellite (Sentinel, Landsat)</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Photogrammétrie drone</span><span class="skill__level">3/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.6"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">LiDAR / MNT-MNS</span><span class="skill__level">3/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.6"></div></div></div>
+        </div>
+
+        <div class="skill-cat">
+          <h3>Compétences transversales</h3>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Gestion de projet</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Communication cartographique</span><span class="skill__level">5/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:1"></div></div></div>
+          <div class="skill"><div class="skill__head"><span class="skill__name">Anglais professionnel</span><span class="skill__level">4/5</span></div>
+            <div class="skill__bar"><div class="skill__fill" style="--fillscale:0.8"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPÉRIENCE
+       🔧 À PERSONNALISER : postes, entreprises, dates, missions
+       ============================================================ -->
+  <section id="experience" class="section-pad reveal" aria-labelledby="exp-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">C · 3</span>
+        <h2 id="exp-h">Expérience</h2>
+      </div>
+
+      <div class="timeline">
+        <article class="station">
+          <div class="station__marker" aria-hidden="true"></div>
+          <div class="station__card">
+            <div class="station__meta"><span>2023 — Présent</span><span>Ville, France</span></div>
+            <h3>Ingénieur·e Géomaticien·ne</h3>
+            <p class="station__org">Bureau d'études Cartho+ (exemple)</p>
+            <ul>
+              <li>Conception et déploiement d'un WebSIG communal (Leaflet + PostGIS + API).</li>
+              <li>Automatisation de traitements de données spatiales avec Python (GeoPandas, Rasterio).</li>
+              <li>Production de cartes thématiques pour des dossiers d'aménagement du territoire.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="station">
+          <div class="station__marker" aria-hidden="true"></div>
+          <div class="station__card">
+            <div class="station__meta"><span>2021 — 2023</span><span>Ville, France</span></div>
+            <h3>Chargé·e d'études SIG</h3>
+            <p class="station__org">Collectivité territoriale (exemple)</p>
+            <ul>
+              <li>Structuration et mise à jour de la base de données spatiale du territoire.</li>
+              <li>Analyse multi-temporelle de l'occupation des sols par télédétection.</li>
+              <li>Support aux services techniques pour la lecture et la production de cartes.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="station">
+          <div class="station__marker" aria-hidden="true"></div>
+          <div class="station__card">
+            <div class="station__meta"><span>2019 — 2021</span><span>Ville, France</span></div>
+            <h3>Technicien·ne Topographe</h3>
+            <p class="station__org">Cabinet de géomètre-expert (exemple)</p>
+            <ul>
+              <li>Levés topographiques terrain (GPS RTK, station totale).</li>
+              <li>Traitement de nuages de points et production de plans.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FORMATION
+       🔧 À PERSONNALISER : diplômes, établissements, années
+       ============================================================ -->
+  <section id="formation" class="section-pad reveal" aria-labelledby="form-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">D · 4</span>
+        <h2 id="form-h">Formation</h2>
+      </div>
+
+      <div class="edu-list">
+        <div class="edu-item">
+          <div><h3>Master Géomatique — SIGMA</h3><p>Université de Toulouse (exemple)</p></div>
+          <time>2019 — 2021</time>
+        </div>
+        <div class="edu-item">
+          <div><h3>Licence Géographie &amp; Aménagement</h3><p>Université de Poitiers (exemple)</p></div>
+          <time>2016 — 2019</time>
+        </div>
+        <div class="edu-item">
+          <div><h3>BTS Géomètre-Topographe</h3><p>Lycée technique (exemple)</p></div>
+          <time>2014 — 2016</time>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJETS
+       🔧 À PERSONNALISER : titres, descriptions, liens, tags
+       ============================================================ -->
+  <section id="projets" class="section-pad reveal" aria-labelledby="proj-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">E · 5</span>
+        <h2 id="proj-h">Projets</h2>
+      </div>
+
+      <div class="tiles">
+        <article class="tile">
+          <div class="tile__inner">
+            <span class="tile__coord">TUILE 12 / 34</span>
+            <h3>Cartographie interactive des risques d'inondation</h3>
+            <p>WebSIG public permettant de visualiser les zones à risque et l'historique des crues d'un bassin versant.</p>
+            <ul class="tile__tags"><li>Leaflet</li><li>PostGIS</li><li>Python</li></ul>
+            <a href="#" class="tile__link">Voir le projet →</a>
+          </div>
+        </article>
+
+        <article class="tile">
+          <div class="tile__inner">
+            <span class="tile__coord">TUILE 08 / 19</span>
+            <h3>Suivi de l'occupation des sols par télédétection</h3>
+            <p>Analyse multi-temporelle (2010–2025) à partir d'images Sentinel-2 pour suivre l'artificialisation des sols.</p>
+            <ul class="tile__tags"><li>QGIS</li><li>Sentinel-2</li><li>Rasterio</li></ul>
+            <a href="#" class="tile__link">Voir le projet →</a>
+          </div>
+        </article>
+
+        <article class="tile">
+          <div class="tile__inner">
+            <span class="tile__coord">TUILE 21 / 07</span>
+            <h3>WebSIG patrimonial pour une collectivité</h3>
+            <p>Application de gestion du patrimoine bâti et des espaces verts communaux, avec fiches et export PDF.</p>
+            <ul class="tile__tags"><li>Mapbox GL</li><li>Node.js</li><li>PostgreSQL</li></ul>
+            <a href="#" class="tile__link">Voir le projet →</a>
+          </div>
+        </article>
+
+        <article class="tile">
+          <div class="tile__inner">
+            <span class="tile__coord">TUILE 03 / 26</span>
+            <h3>Modèle numérique de terrain par drone</h3>
+            <p>Production d'un MNT haute résolution par photogrammétrie pour le suivi d'un chantier de génie civil.</p>
+            <ul class="tile__tags"><li>Drone</li><li>Photogrammétrie</li><li>LiDAR</li></ul>
+            <a href="#" class="tile__link">Voir le projet →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       🔧 À PERSONNALISER : email, téléphone, liens, lien PDF du CV
+       ============================================================ -->
+  <section id="contact" class="reveal" aria-labelledby="contact-h">
+    <div class="wrap" style="padding-top:88px; padding-bottom:88px;">
+      <div class="contact-box">
+        <div>
+          <div class="section-head">
+            <span class="grid-ref" style="border-color:var(--brass-light); color:var(--brass-light); background:rgba(184,134,59,0.14);">F · 6</span>
+            <h2 id="contact-h">Contact</h2>
+          </div>
+          <div class="contact-intro">
+            <p>Basé·e à Ville, France — disponible pour un poste ou une mission en géomatique, SIG ou cartographie.</p>
+          </div>
+          <button class="cta-download" type="button" onclick="window.open('#', '_blank')">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M12 3 V15 M7 10 L12 15 L17 10"/><path d="M4 20 H20"/></svg>
+            Télécharger mon CV (PDF)
+          </button>
+        </div>
+
+        <div class="contact-list">
+          <a href="mailto:prenom.nom@exemple.fr">
+            <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M4 6 L12 13 L20 6"/></svg>
+            prenom.nom@exemple.fr
+          </a>
+          <a href="tel:+33600000000">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M5 4 C5 4 8 4 9 7 C9.5 8.5 8 9 8 10 C8 13 11 16 14 16 C15 16 15.5 14.5 17 15 C20 16 20 19 20 19 C20 21 18 21 18 21 C10 21 3 14 3 6 C3 6 3 4 5 4 Z"/></svg>
+            +33 6 00 00 00 00
+          </a>
+          <a href="https://www.linkedin.com/in/votre-profil" target="_blank" rel="noopener">
+            <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10 V17 M8 7 V7.2 M12 17 V12.5 C12 10.5 15 10.5 15 12.5 V17"/></svg>
+            linkedin.com/in/votre-profil
+          </a>
+          <a href="https://github.com/votre-compte" target="_blank" rel="noopener">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M12 3 C7 3 4 6.5 4 11 C4 15 6.5 17.5 9 18.3 C9 17.5 9 16.4 9 15.7 C7 16.1 6.3 14.7 6.1 14 C6 13.6 5.4 12.6 4.9 12.3 C4.5 12.1 4.4 11.6 4.9 11.6 C5.7 11.6 6.3 12.4 6.5 12.7 C7.1 13.7 8 13.4 8.5 13.2 C8.6 12.6 8.9 12.2 9.2 11.9 C6.9 11.6 5.5 10.5 5.5 8.3 C5.5 7.4 5.8 6.7 6.3 6.1 C6.2 5.8 5.9 4.9 6.4 3.7 C6.4 3.7 7.3 3.4 9 4.6 C9.7 4.4 10.4 4.3 11.1 4.3 C11.9 4.3 12.6 4.4 13.3 4.6 C15 3.4 15.9 3.7 15.9 3.7 C16.4 4.9 16.1 5.8 16 6.1 C16.5 6.7 16.8 7.4 16.8 8.3 C16.8 10.5 15.4 11.6 13.1 11.9 C13.5 12.3 13.8 13 13.8 14 C13.8 15.4 13.8 17 13.8 18.3 C16.3 17.5 18.8 15 18.8 11 C18.8 6.5 15.8 3 12 3 Z"/></svg>
+            github.com/votre-compte
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     PIED DE PAGE
+     ============================================================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="scale-bar" aria-hidden="true">
+      <div class="scale-bar__track"><span></span><span></span><span></span><span></span></div>
+      <div class="scale-bar__labels"><span>ÉCHELLE</span><span>1:1</span></div>
+    </div>
+    <small>FEUILLE 1/1 — Réalisé en HTML &amp; CSS — © 2026 Prénom Nom</small>
+  </div>
+</footer>
+
+<!-- bouton retour en haut -->
+<button class="to-top" id="toTop" type="button" aria-label="Retour en haut">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 4 L12 20 M6 10 L12 4 L18 10"/>
+  </svg>
+</button>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* -- reveal on scroll -- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduceMotion){
+    var revealObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('is-visible'); revealObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function(el){ revealObs.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* -- skill bars fill on view -- */
+  var skillEls = document.querySelectorAll('.skill');
+  if('IntersectionObserver' in window){
+    var skillObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('is-visible'); skillObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    skillEls.forEach(function(el){ skillObs.observe(el); });
+  } else {
+    skillEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* -- scrollspy : légende + règle de marge -- */
+  var sections = document.querySelectorAll('main section[id]');
+  var navLinks = document.querySelectorAll('.legend-item[data-nav]');
+  var railBtns = document.querySelectorAll('.margin-rail button[data-rail-for]');
+
+  function setActive(id){
+    navLinks.forEach(function(a){
+      a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+    });
+    railBtns.forEach(function(b){
+      b.classList.toggle('is-active', b.dataset.railFor === id);
+    });
+  }
+
+  if('IntersectionObserver' in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ setActive(e.target.id); }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    sections.forEach(function(s){ spy.observe(s); });
+  }
+
+  railBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var target = document.getElementById(b.dataset.railFor);
+      if(target){ target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); }
+    });
+  });
+
+  /* -- back to top -- */
+  var toTop = document.getElementById('toTop');
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        toTop.classList.toggle('is-visible', window.scrollY > 480);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  toTop.addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>
